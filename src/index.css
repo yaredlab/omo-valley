@@ -538,3 +538,24 @@ body {
     animation: none;
   }
 }
+
+/* ── Necklace Showcase section ─────────────────────────────────────────── */
+
+/* Prevent horizontal overflow from necklace scaling past viewport */
+.necklace-showcase-sticky {
+  overflow: hidden;
+}
+
+/* Reduced-motion: show portrait and necklace statically */
+@media (prefers-reduced-motion: reduce) {
+  .necklace-portrait-layer,
+  .necklace-layer,
+  .necklace-story-panel,
+  .necklace-overlay,
+  .necklace-closing {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
