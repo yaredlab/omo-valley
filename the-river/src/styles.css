@@ -1,0 +1,277 @@
+@import '@fontsource/libre-caslon-display/400.css';
+@import '@fontsource/familjen-grotesk/400.css';
+@import '@fontsource/familjen-grotesk/400-italic.css';
+@import '@fontsource/familjen-grotesk/500.css';
+
+/* ------------------------------------------------------------------ tokens */
+:root {
+  /* colour: almost-black ground, one accent taken from the river itself (silt) */
+  --night: #050504;
+  --bone: #e8e1d2;
+  --ash: #9a9487;
+  --silt: #cdb48a;
+  --silt-dim: rgba(205, 180, 138, 0.3);
+
+  /* plates used by empty photograph slots, one tone per landscape */
+  --tone-river: #2b261c;
+  --tone-flood: #3a3224;
+  --tone-grass: #4a4125;
+  --tone-forest: #1d261b;
+  --tone-valley: #3b2a1f;
+
+  --display: 'Libre Caslon Display', 'Iowan Old Style', 'Times New Roman', serif;
+  --text: 'Familjen Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* type scale (≈ 1.333) */
+  --t-small: 0.8125rem;
+  --t-body: 1.0625rem;
+  --t-lead: 1.4rem;
+  --t-h3: clamp(2rem, 3.4vw, 3.2rem);
+  --t-h2: clamp(2.6rem, 6vw, 6.2rem);
+  --t-h1: clamp(3.6rem, 9vw, 9rem);
+
+  --gutter: clamp(20px, 5vw, 72px);
+  --spine-x: clamp(26px, 4vw, 60px);
+  --indent: clamp(72px, 14vw, 220px);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--night); -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--bone);
+  font-family: var(--text);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-feature-settings: 'tnum' 1, 'kern' 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, p, ol, figure { margin: 0; padding: 0; }
+ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 1px solid var(--silt); outline-offset: 6px; }
+::selection { background: var(--silt); color: var(--night); }
+
+.skip {
+  position: fixed; left: 12px; top: -60px; z-index: 50;
+  padding: 10px 14px; background: var(--bone); color: var(--night); font-size: var(--t-small);
+}
+.skip:focus { top: 12px; }
+
+/* ------------------------------------------------------------------ fixed layers */
+#stage {
+  position: fixed; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  display: block; background: var(--night);
+}
+#labels { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.label {
+  position: absolute; left: 0; top: 0; opacity: 0; white-space: nowrap;
+  font-style: italic; font-size: var(--t-small); letter-spacing: 0.08em;
+  color: rgba(232, 225, 210, 0.5);
+  will-change: transform, opacity;
+}
+.label--river { color: rgba(205, 180, 138, 0.8); font-size: 0.9rem; }
+
+#river { position: fixed; inset: 0; z-index: 6; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+#river path { fill: none; stroke-linecap: butt; stroke-linejoin: round; }
+/* the part of the river not yet travelled is a quiet line; the casing only keeps it legible over pale photographs */
+#river .r-base { stroke: rgba(205, 180, 138, 0.62); stroke-width: 1; }
+#river .r-draw { stroke: var(--silt); stroke-width: 1.25; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+#river .r-case { stroke: rgba(5, 5, 4, 0.3); stroke-width: 3; }
+#river .r-flow { stroke: #fff3d6; stroke-width: 1.6; stroke-dasharray: 0.014 0.186; stroke-dashoffset: 0; opacity: 0; }
+#river .r-head { fill: var(--silt); opacity: 0; }
+
+#readout {
+  position: fixed; right: var(--gutter); bottom: 4.5vh; z-index: 7;
+  font-size: var(--t-small); letter-spacing: 0.04em; color: var(--ash);
+  opacity: 0; display: flex; gap: 1.4em; pointer-events: none;
+}
+
+#veil { position: fixed; inset: 0; z-index: 30; background: var(--night); opacity: 0; pointer-events: none; }
+
+/* ------------------------------------------------------------------ section scaffolding */
+main { position: relative; z-index: 1; }
+section { position: relative; }
+.sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+
+#descent { height: 900vh; }
+#arrival { height: 480vh; }
+#journey { height: 820vh; background: var(--night); }
+#people { height: 620vh; background: var(--night); }
+#finale { height: 640vh; }
+#landscape { background: var(--night); }
+
+/* ------------------------------------------------------------------ opening */
+.title { position: absolute; left: var(--indent); bottom: 11vh; will-change: opacity; }
+.title__name {
+  font-family: var(--display); font-weight: 400; font-size: var(--t-h1);
+  letter-spacing: 0.16em; line-height: 0.9; margin-left: -0.04em;
+}
+.title__where { margin-top: 1.4rem; color: var(--ash); letter-spacing: 0.03em; }
+.scroll-cue {
+  position: absolute; left: 50%; bottom: 3.5vh; transform: translateX(-50%);
+  font-size: var(--t-small); letter-spacing: 0.1em; color: rgba(154, 148, 135, 0.7);
+}
+
+/* ------------------------------------------------------------------ arrival: where the Omo is */
+.beats { position: absolute; left: var(--indent); bottom: 12vh; width: min(34rem, calc(100% - var(--indent) - var(--gutter))); height: 20rem; }
+.beat { position: absolute; left: 0; bottom: 0; opacity: 0; will-change: opacity, transform; }
+.beat__title { font-family: var(--display); font-weight: 400; font-size: var(--t-h3); line-height: 1.05; margin-bottom: 1.1rem; letter-spacing: -0.005em; }
+.beat p { max-width: 38ch; color: rgba(232, 225, 210, 0.9); }
+
+/* ------------------------------------------------------------------ slots (photographs) */
+.slot { position: relative; overflow: hidden; background: var(--tone, #17140f); }
+.slot picture, .slot img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.slot img {
+  object-fit: cover; object-position: var(--focus, 50% 50%); opacity: 0; transition: opacity 0.9s var(--ease);
+  transform: translate3d(calc(var(--pan, 0) * 1%), 0, 0) scale(var(--zoom, 1));
+}
+.slot--pano img { --zoom: 1.12; }
+.slot[data-state='ready'] img { opacity: 1; }
+/* only ever visible on an empty slot; kept at the top so it never sits under the chapter text */
+.slot__note {
+  position: absolute; left: calc(var(--spine-x) + 20px); top: 14px; max-width: calc(100% - var(--spine-x) - 40px);
+  font-size: var(--t-small); line-height: 1.4; color: rgba(232, 225, 210, 0.42);
+  opacity: 0; pointer-events: none;
+}
+.slot[data-state='empty'] .slot__note { opacity: 1; }
+.slot[data-state='empty']::after { content: ''; position: absolute; inset: 0; border: 1px solid rgba(232, 225, 210, 0.1); pointer-events: none; }
+
+.slot--bleed { position: absolute; inset: 0; }
+.slot--wide { aspect-ratio: 16 / 9; }
+.slot--wide-low { aspect-ratio: 16 / 10; }
+.slot--tall { aspect-ratio: 3 / 4; }
+.slot--pano { aspect-ratio: 21 / 9; width: 100%; }
+.slot--slit { width: 100%; height: 100vh; height: 100svh; }
+
+/* ------------------------------------------------------------------ chapters */
+.chapter__no { font-size: var(--t-small); color: var(--ash); letter-spacing: 0.04em; margin-bottom: 0.9rem; }
+.chapter__title { font-family: var(--display); font-weight: 400; font-size: var(--t-h2); line-height: 0.98; letter-spacing: -0.012em; margin-bottom: 1.4rem; }
+.chapter__text p:last-child { max-width: 34ch; color: rgba(232, 225, 210, 0.88); }
+
+.chapter { position: relative; }
+
+.chapter--river { height: 135vh; overflow: hidden; }
+.chapter--river .slot--bleed { height: 100%; }
+.chapter--river .chapter__text { position: absolute; left: var(--indent); top: 16vh; max-width: min(36rem, 70vw); }
+
+.chapter--floodplain {
+  display: grid; grid-template-columns: minmax(15rem, 24vw) minmax(0, 1fr); gap: 4vw;
+  align-items: end; padding: 26vh 0 20vh var(--indent);
+}
+.chapter--floodplain .slot { margin-right: 0; }
+
+.chapter--grassland {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2vw;
+  padding: 18vh 0 20vh var(--indent); padding-right: var(--gutter);
+}
+.chapter--grassland .slot--tall { grid-column: 1 / span 4; grid-row: 1 / span 2; }
+.chapter--grassland .chapter__text { grid-column: 6 / span 4; grid-row: 1; align-self: start; margin-top: 8vh; }
+.chapter--grassland .slot--wide-low { grid-column: 6 / span 7; grid-row: 2; margin-top: 16vh; margin-right: calc(var(--gutter) * -1); }
+
+.chapter--forest { height: 190vh; }
+.chapter--forest .slot--slit { position: sticky; top: 0; }
+.chapter--forest .chapter__text { position: absolute; left: var(--indent); top: 122vh; max-width: min(34rem, 70vw); z-index: 2; text-shadow: 0 1px 24px rgba(0, 0, 0, 0.55); }
+
+.chapter--valley { padding: 12vh 0 22vh; overflow: hidden; }
+.chapter--valley .slot--pano { will-change: transform; }
+.chapter--valley .chapter__text { margin: 10vh 0 0 var(--indent); max-width: min(36rem, 70vw); }
+
+/* Text that sits on a photograph gets a quiet shade behind it, whatever the picture turns out to be.
+   Heavier at the left edge where the words are, gone by the middle of the frame. */
+#journey .sticky::before,
+#people .sticky::before {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(5, 5, 4, 0.68) 0%, rgba(5, 5, 4, 0.42) 30%, rgba(5, 5, 4, 0) 64%),
+    linear-gradient(0deg, rgba(5, 5, 4, 0.5) 0%, rgba(5, 5, 4, 0) 40%);
+}
+.chapter--river .chapter__text,
+.chapter--forest .chapter__text { isolation: isolate; }
+.chapter--river .chapter__text::before,
+.chapter--forest .chapter__text::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none;
+  inset: -22vh -14vw -16vh -22vw;
+  background: radial-gradient(ellipse 60% 55% at 38% 52%, rgba(5, 5, 4, 0.74), rgba(5, 5, 4, 0) 74%);
+}
+
+/* ------------------------------------------------------------------ journey */
+.journey__plates { position: absolute; inset: 0; }
+.journey__plate { opacity: 0; will-change: opacity, transform; }
+.journey__words { position: absolute; left: var(--indent); bottom: 11vh; height: 4.2rem; width: 80vw; z-index: 3; }
+.journey__words li {
+  position: absolute; left: 0; bottom: 0; opacity: 0;
+  font-family: var(--display); font-size: var(--t-h3); line-height: 1.1; letter-spacing: -0.005em;
+  text-shadow: 0 1px 22px rgba(0, 0, 0, 0.45);
+}
+
+/* ------------------------------------------------------------------ people */
+.people__ground { will-change: transform; }
+.people__inset { position: absolute; z-index: 3; will-change: clip-path; clip-path: inset(0 0 100% 0); }
+/* Land, life, people: three stepping stones that grow as they cross to the right. Sized by height so they never meet. */
+.people__inset--a { left: 46vw; bottom: 9vh; height: 38vh; aspect-ratio: 4 / 5; --tone: var(--tone-grass); }
+.people__inset--b { left: 46vw; top: 10vh; height: 30vh; aspect-ratio: 1 / 1; --tone: var(--tone-flood); }
+.people__inset--c { right: 6vw; top: 12vh; height: 56vh; aspect-ratio: 4 / 5; --tone: var(--tone-valley); }
+.people__words { position: absolute; left: var(--indent); top: 50%; transform: translateY(-50%); z-index: 3; }
+.people__words li {
+  font-family: var(--display); font-size: clamp(2.6rem, 6.4vw, 6rem); line-height: 1.04; letter-spacing: -0.012em;
+  color: var(--bone); opacity: 0.16; transition: opacity 0.7s var(--ease);
+  text-shadow: 0 1px 26px rgba(0, 0, 0, 0.5);
+}
+.people__words li.is-on { opacity: 1; }
+
+/* ------------------------------------------------------------------ finale */
+.finale__lines { position: absolute; left: var(--indent); top: 50%; transform: translateY(-50%); width: min(30rem, 34vw); }
+.finale__big {
+  font-family: var(--display); font-size: clamp(1.7rem, 3.3vw, 3.4rem); line-height: 1.22; letter-spacing: 0.14em; font-weight: 400;
+  opacity: 0; will-change: opacity, transform;
+}
+.finale__small { margin-top: 1.6rem; color: rgba(232, 225, 210, 0.82); opacity: 0; }
+
+.next {
+  position: absolute; left: calc(50% + 2.2rem); bottom: 9vh; display: grid; grid-template-columns: auto auto; column-gap: 1.2rem;
+  align-items: baseline; opacity: 0; pointer-events: none; z-index: 8;
+}
+.next.is-live { pointer-events: auto; }
+/* reachable by keyboard before it has faded in, and visible when it is */
+.next:focus-visible { opacity: 1 !important; }
+.next__label { grid-column: 1 / -1; color: var(--ash); font-size: var(--t-small); letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+.next__title { font-family: var(--display); font-size: var(--t-h3); line-height: 1; }
+.next__no { color: var(--ash); font-size: var(--t-small); }
+.next:hover .next__title, .next:focus-visible .next__title { color: var(--silt); }
+
+/* ------------------------------------------------------------------ small screens */
+@media (max-width: 760px) {
+  :root { --indent: 68px; --gutter: 20px; --spine-x: 22px; }
+  .title { bottom: 14vh; left: 68px; }
+  .title__name { font-size: clamp(3.4rem, 19vw, 6rem); letter-spacing: 0.12em; }
+  .beats { bottom: 10vh; height: 24rem; }
+  .chapter--floodplain { display: block; padding: 18vh var(--gutter) 14vh var(--indent); }
+  .chapter--floodplain .slot { margin: 3rem calc(var(--gutter) * -1) 0 calc(var(--indent) * -1); }
+  .chapter--grassland { display: block; padding: 14vh var(--gutter) 14vh var(--indent); }
+  .chapter--grassland .slot--tall { margin-left: calc(var(--indent) * -1); width: calc(100% + var(--indent)); }
+  .chapter--grassland .chapter__text { margin: 3rem 0; }
+  .chapter--grassland .slot--wide-low { margin: 0 calc(var(--gutter) * -1) 0 calc(var(--indent) * -1); }
+  .chapter--valley .slot--pano { aspect-ratio: 4 / 5; }
+  .people__inset--a { left: auto; right: 5vw; bottom: 8vh; height: auto; width: 46vw; }
+  .people__inset--b { left: auto; right: 5vw; top: 38vh; height: auto; width: 30vw; }
+  .people__inset--c { right: 5vw; top: 8vh; height: auto; width: 50vw; }
+  .people__words li { font-size: clamp(2.4rem, 13vw, 4rem); }
+  /* the river sits low and centred in the last view, so the line is set above it */
+  .finale__lines { width: calc(100% - var(--indent) - var(--gutter)); top: 9vh; transform: none; }
+  .finale__small { margin-top: 1rem; }
+  .next { left: calc(50% + 1.6rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot img, .people__words li { transition: none; }
+}

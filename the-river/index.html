@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>The River — Omo</title>
+  <meta name="description" content="The Omo River, from the Ethiopian Highlands to Lake Turkana. Page 03 of a documentary on the Omo Valley." />
+  <meta name="theme-color" content="#050504" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23050504'/%3E%3Cpath d='M9 1 C6 5 11 7 8 11 S9 15 8 16' fill='none' stroke='%23cdb48a' stroke-width='1.2'/%3E%3C/svg%3E" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#landscape">Skip the introduction</a>
+
+  <!-- Fixed stage: map, satellite, photograph and video all live in this one canvas -->
+  <canvas id="stage" aria-hidden="true"></canvas>
+
+  <!-- Map labels, positioned in screen space from map coordinates -->
+  <div id="labels" aria-hidden="true">
+    <span class="label" data-lon="38.55" data-lat="8.0">Ethiopia</span>
+    <span class="label" data-lon="37.55" data-lat="3.1">Kenya</span>
+    <span class="label" data-lon="36.28" data-lat="3.55">Lake Turkana</span>
+    <span class="label label--river" data-lon="37.62" data-lat="7.55">Omo</span>
+  </div>
+
+  <!-- The river. Two instances of the same real path: one in map space, one as the page's spine. -->
+  <svg id="river" aria-hidden="true" focusable="false">
+    <g id="river-map">
+      <path class="r-base" />
+      <path class="r-draw" pathLength="1" />
+      <path class="r-flow" pathLength="1" />
+      <circle class="r-head" r="3" />
+    </g>
+    <g id="river-spine">
+      <path class="r-case" />
+      <path class="r-base" />
+      <path class="r-draw" pathLength="1" />
+      <path class="r-flow" pathLength="1" />
+      <circle class="r-head" r="3.5" />
+    </g>
+  </svg>
+
+  <p id="readout" aria-hidden="true"><span id="readout-lat"></span><span id="readout-lon"></span></p>
+
+  <main id="main">
+
+    <!-- 1 · LINE → MAP → SATELLITE → PHOTOGRAPH → VIDEO -->
+    <section id="descent" aria-label="The Omo River, from line to landscape">
+      <div class="sticky">
+        <header class="title">
+          <h1 class="title__name">OMO</h1>
+          <p class="title__where">Southwestern Ethiopia</p>
+        </header>
+        <p class="scroll-cue" id="scroll-cue">Scroll</p>
+      </div>
+    </section>
+
+    <!-- 2 · Where it is -->
+    <section id="arrival" aria-label="Where the Omo is">
+      <div class="sticky">
+        <div class="beats">
+          <article class="beat" data-beat="0">
+            <h2 class="beat__title">Southwestern Ethiopia</h2>
+            <p>The Omo rises in the Ethiopian Highlands and runs south to Lake Turkana. No river leaves the lake. The Omo ends there.</p>
+          </article>
+          <article class="beat" data-beat="1">
+            <h2 class="beat__title">Lower Omo</h2>
+            <p>The last stretch before the lake. Woodland follows the banks; open savannah and thicket stand behind it. Each year the river rises over its banks, and farmers plant the wet ground it leaves.</p>
+          </article>
+          <article class="beat" data-beat="2">
+            <h2 class="beat__title">An old valley</h2>
+            <p>Fossils of early humans lie in its sediments, and UNESCO listed the Lower Valley of the Omo in 1980. At least 200,000 people live here today. The Mursi, Hamar, Bodi, Kara, Kwegu, Nyangatom and Dasanech are among them.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · The landscape, one chapter at a time -->
+    <section id="landscape" class="plates" aria-label="The Lower Omo landscape">
+
+      <article class="chapter chapter--river" data-chapter="1">
+        <figure class="slot slot--bleed" data-slot="river-01"></figure>
+        <div class="chapter__text">
+          <p class="chapter__no">1</p>
+          <h2 class="chapter__title">The River</h2>
+          <p>One river across dry country, and almost everything here depends on it.</p>
+        </div>
+      </article>
+
+      <article class="chapter chapter--floodplain" data-chapter="2">
+        <div class="chapter__text">
+          <p class="chapter__no">2</p>
+          <h2 class="chapter__title">The Floodplains</h2>
+          <p>Each year the river rises over its banks. When it falls, it leaves silt and wet ground to plant.</p>
+        </div>
+        <figure class="slot slot--wide" data-slot="floodplain-01"></figure>
+      </article>
+
+      <article class="chapter chapter--grassland" data-chapter="3">
+        <figure class="slot slot--tall" data-slot="grassland-01"></figure>
+        <div class="chapter__text">
+          <p class="chapter__no">3</p>
+          <h2 class="chapter__title">The Grassland</h2>
+          <p>Beyond the banks the land opens into savannah and thicket, and herds move across it.</p>
+        </div>
+        <figure class="slot slot--wide-low" data-slot="grassland-02"></figure>
+      </article>
+
+      <article class="chapter chapter--forest" data-chapter="4">
+        <div class="chapter__text">
+          <p class="chapter__no">4</p>
+          <h2 class="chapter__title">The Forest</h2>
+          <p>Woodland follows the water, a dark green line through open country.</p>
+        </div>
+        <figure class="slot slot--slit" data-slot="forest-01"></figure>
+      </article>
+
+      <article class="chapter chapter--valley" data-chapter="5">
+        <figure class="slot slot--pano" data-slot="valley-01"></figure>
+        <div class="chapter__text">
+          <p class="chapter__no">5</p>
+          <h2 class="chapter__title">The Valley</h2>
+          <p>From its source in the Highlands to Lake Turkana, the Omo falls about 1,900 metres. The valley is where that fall ends.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- 4 · Travelling along the river -->
+    <section id="journey" aria-label="Travelling along the Omo">
+      <div class="sticky">
+        <div class="journey__plates">
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-aerial"></figure>
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-water"></figure>
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-riverbank"></figure>
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-vegetation"></figure>
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-landscape"></figure>
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-communities"></figure>
+          <figure class="slot slot--bleed journey__plate" data-slot="journey-valley"></figure>
+        </div>
+        <ol class="journey__words" aria-label="Along the river">
+          <li>Aerial</li><li>Water</li><li>Riverbank</li><li>Vegetation</li><li>Landscape</li><li>Communities</li><li>Valley</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 5 · River → land → life → people -->
+    <section id="people" aria-label="From the river to its people">
+      <div class="sticky">
+        <figure class="slot slot--bleed people__ground" data-slot="people-ground"></figure>
+        <figure class="slot people__inset people__inset--a" data-slot="people-a"></figure>
+        <figure class="slot people__inset people__inset--b" data-slot="people-b"></figure>
+        <figure class="slot people__inset people__inset--c" data-slot="people-c"></figure>
+        <ol class="people__words" aria-label="River, land, life, people">
+          <li>river</li><li>land</li><li>life</li><li>people</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 6 · Return to the air -->
+    <section id="finale" aria-label="The land holds them">
+      <div class="sticky">
+        <div class="finale__lines">
+          <p class="finale__big">THE LAND HOLDS THEM</p>
+          <p class="finale__small">And the river is at its center.</p>
+        </div>
+        <a class="next" id="next" href="/04/" data-next="/04/">
+          <span class="next__label">Next</span>
+          <span class="next__title">The People</span>
+          <span class="next__no">04</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <div id="veil" aria-hidden="true"></div>
+</body>
+</html>
