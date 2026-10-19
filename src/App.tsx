@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import NecklaceShowcase from './components/NecklaceShowcase';
 import ThirdPage from './components/ThirdPage';
 import DraggableCardDemo from './components/DraggableCardDemo';
+import PageThreeLink from './components/PageThreeLink';
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
       {/* Subsequent sections have solid backgrounds that cover the fixed video */}
       <ThirdPage />
       <DraggableCardDemo />
+      {/* Entry into Page 03: The River — the only addition to the existing scroll story */}
+      <PageThreeLink />
     </div>
   );
 }
